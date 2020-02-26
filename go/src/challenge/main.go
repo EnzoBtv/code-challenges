@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math"
+	"regexp"
+	"strconv"
 	"unicode/utf8"
 )
 
@@ -104,9 +107,39 @@ func convert(s string, numRows int) string {
 	return fullString
 }
 
-func main() {
-	fmt.Println(convert("PAYPALISHIRING", 4))
+// Given a 32-bit signed integer, reverse digits of an integer.
+
+// Example 1:
+
+// Input: 123
+// Output: 321
+
+func reverse(x int) int {
+	strInt := strconv.Itoa(x)
+	regexpNegative := regexp.MustCompile("-")
+	negative := regexpNegative.MatchString(strInt)
+	strInt = regexpNegative.ReplaceAllLiteralString(strInt, "")
+	r := []rune(strInt)
+	fmt.Println(r)
+	for i, j := 0, len(r)-1; i < len(r)/2; i, j = i+1, j-1 {
+		r[i], r[j] = r[j], r[i]
+	}
+
+	if negative {
+		strInt = fmt.Sprintf("-%s", string(r))
+	} else {
+		strInt = fmt.Sprintf("%s", string(r))
+	}
+
+	integer, _ := strconv.Atoi(strInt)
+
+	if math.Pow(2, 31) < float64(integer) || -math.Pow(2, 31) > float64(integer) {
+		return 0
+	}
+
+	return integer
 }
 
-// 0 0   1 0   2 0
-// 0 1   1 1   2 1
+func main() {
+	fmt.Println(reverse(-2147483648))
+}
