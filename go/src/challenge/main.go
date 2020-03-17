@@ -5,6 +5,7 @@ import (
 	"math"
 	"regexp"
 	"strconv"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -140,6 +141,108 @@ func reverse(x int) int {
 	return integer
 }
 
+func findInArray(tokens []string, input string) bool {
+	for _, token := range tokens {
+		if token == input {
+			return true
+		}
+	}
+	return false
+}
+
+func compareStrings(input string, tokens []string) bool {
+	size := len(input)
+	if size == 0 {
+		return true
+	}
+
+	tokenMap := make(map[string]string)
+
+	for _, token := range tokens {
+		tokenMap[token] = token
+	}
+
+	strSlice := make([]string, 0)
+
+	if tokenMap[input] != "" {
+		return true
+	}
+
+	for i := 0; i < size; i++ {
+		if tokenMap[string(input[i])] != "" {
+			strSlice = append(strSlice, string(input[i]))
+			continue
+		} else {
+			oldLen := len(strSlice)
+			toBeAdded := ""
+			for j := i + 1; j < size; j++ {
+				if tokenMap[string(input[i:j+1])] != "" {
+					toBeAdded = string(input[i : j+1])
+				}
+			}
+			if toBeAdded != "" {
+				strSlice = append(strSlice, toBeAdded)
+			}
+			if oldLen != len(strSlice) {
+				theString := strings.Join(strSlice, "")
+				i = len(theString) - 1
+			}
+
+		}
+	}
+	fmt.Println(strSlice)
+	newString := strings.Join(strSlice, "")
+
+	if newString == input {
+		return true
+	}
+
+	return false
+}
+
+func pushIndex(numberArr *[]int, index, number int) {
+	*numberArr = append(*numberArr, 0)
+
+	copy((*numberArr)[index+1:], (*numberArr)[index:])
+
+	(*numberArr)[index] = number
+
+}
+
+func mergeIntervalLists(intervalList [][]int) []int {
+	numberFrequency := make(map[int]int)
+	for i, interval := range intervalList {
+		lastNumber := interval[len(interval)-1]
+		for j := 0; j < len(interval); j++ {
+			number := interval[j]
+			if number+1 == lastNumber {
+				numberFrequency[number]++
+				numberFrequency[lastNumber]++
+				break
+			}
+			numberFrequency[number]++
+
+			pushIndex(&interval, j+1, number+1)
+
+		}
+
+		intervalList[i] = interval
+	}
+
+	duplicateNumbers := make([]int, 0)
+
+	for key, value := range numberFrequency {
+		if value > 1 {
+			duplicateNumbers = append(duplicateNumbers, key)
+		}
+	}
+
+	return duplicateNumbers
+}
+
 func main() {
-	fmt.Println(reverse(-2147483648))
+
+	matrix := [][]int{{4, 8}, {6, 10}}
+
+	fmt.Println(mergeIntervalLists(matrix))
 }
