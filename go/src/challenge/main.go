@@ -141,16 +141,7 @@ func reverse(x int) int {
 	return integer
 }
 
-func findInArray(tokens []string, input string) bool {
-	for _, token := range tokens {
-		if token == input {
-			return true
-		}
-	}
-	return false
-}
-
-func compareStrings(input string, tokens []string) bool {
+func wordBreak(input string, tokens []string) bool {
 	size := len(input)
 	if size == 0 {
 		return true
@@ -200,49 +191,9 @@ func compareStrings(input string, tokens []string) bool {
 	return false
 }
 
-func pushIndex(numberArr *[]int, index, number int) {
-	*numberArr = append(*numberArr, 0)
-
-	copy((*numberArr)[index+1:], (*numberArr)[index:])
-
-	(*numberArr)[index] = number
-
-}
-
-func mergeIntervalLists(intervalList [][]int) []int {
-	numberFrequency := make(map[int]int)
-	for i, interval := range intervalList {
-		lastNumber := interval[len(interval)-1]
-		for j := 0; j < len(interval); j++ {
-			number := interval[j]
-			if number+1 == lastNumber {
-				numberFrequency[number]++
-				numberFrequency[lastNumber]++
-				break
-			}
-			numberFrequency[number]++
-
-			pushIndex(&interval, j+1, number+1)
-
-		}
-
-		intervalList[i] = interval
-	}
-
-	duplicateNumbers := make([]int, 0)
-
-	for key, value := range numberFrequency {
-		if value > 1 {
-			duplicateNumbers = append(duplicateNumbers, key)
-		}
-	}
-
-	return duplicateNumbers
-}
-
 func main() {
 
-	matrix := [][]int{{4, 8}, {6, 10}}
+	//matrix := [][]int{{4, 8}, {6, 10}}
 
-	fmt.Println(mergeIntervalLists(matrix))
+	fmt.Println(compareStringWithSlice("abc", []string{"ab", "bc", "a"}))
 }
